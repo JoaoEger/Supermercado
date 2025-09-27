@@ -1,0 +1,11 @@
+laranjas 20 2
+ovo maltine 10 10
+leite 5 10
+picanha 56.99 3.5
+bolo 10 5
+ovo 1 100
+h2o 5 20
+coca cola 10.39 200feijao 10 10
+teste 1 23
+teste2 10 30
+farofa 10 10
