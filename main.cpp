@@ -16,6 +16,34 @@ struct produtos
     double valorV; 
 };
 
+int lerInt(string msg = "Digite um valor: ") {
+    string entrada;
+    int valor;
+
+    while(true) {
+        cout << msg;
+        getline(cin, entrada);
+
+        bool valido = true;
+
+        for(int i = 0; i < entrada.size(); i++) {
+            char c = entrada[i];
+            if (c < '0' || c > '9') {
+                valido = false;
+                break;
+            }
+        }
+
+        if (valido && !entrada.empty()) {
+            valor = stoi(entrada);
+            return valor;
+        } else {
+            cout << "Entrada invalida! Digite apenas numeros inteiros.\n";
+        }
+    }
+}
+
+
 double lerDouble(string msg = "Digite um valor: "){
     double valor;
     string entrada;
@@ -30,12 +58,12 @@ double lerDouble(string msg = "Digite um valor: "){
         for (int i = 0; i < entrada.size(); i++) {
             char c = entrada[i];
             if ((c < '0' || c > '9') && c != '.') {
-                valido = false; // encontrou caractere inválido
+                valido = false;
                 break;
             }
             if (c == '.') {
                 pontos++;
-                if (pontos > 1) { // mais de um ponto
+                if (pontos > 1) {
                     valido = false;
                     break;
                 }
@@ -43,7 +71,7 @@ double lerDouble(string msg = "Digite um valor: "){
         }
 
         if (valido && !entrada.empty()) {
-            valor = stod(entrada); // converte string para double
+            valor = stod(entrada);
             return valor;
         } else {
             cout << "Entrada invalida! Digite apenas numeros.\n";
@@ -138,6 +166,7 @@ void Vendas(produtos p[], int &qnt) {
     int opc = 0;
     char tecla;
     int quantidade;
+    double total = 0.0;
     while (true) {
         system("cls");
         cout << "Use as setas e ENTER para confirmar\n\n";
@@ -159,16 +188,25 @@ void Vendas(produtos p[], int &qnt) {
             system("cls");
             cout << "Você selecionou: " << p[opc].nome << endl;
 
-                cout << "Informe a quantidade de produtos: " << endl;
             do{
-                cin >> quantidade;
+                quantidade = lerDouble("Informe a quantidade de produtos: ");
                 if(quantidade > p[opc].quanti){
                     cout << "Desculpe, não temos essa quantidade em estoque, temos apenas " << p[opc].quanti << endl;
-                    cout << "Por favor, informa novamente a quantidade: " << endl;
+                    cout << "Por favor! ";
                 }
             }while(quantidade > p[opc].quanti);
-            break;
-        }
+
+            p[opc].quanti -= quantidade;
+            double subtotal = p[opc].valorV * quantidade;
+            total += subtotal;
+
+            cout << "\nSubtotal: " << subtotal << endl;
+            cout << "\nTotal: " << total << endl;
+
+            int opc2 = 0;
+            cout << "Deeja continuar comprando?" << endl;
+
+        }    
     }
 }
 
@@ -178,17 +216,20 @@ void apagarProd(produtos p[], int &qnt) {
         cout << "Nenhum produto cadastrado." << endl;
         return;
     }
-
     ListarProdutos(p, qnt);
+    cout << "(0) - NÃO QUERO REMOVER NENHUM ITEM\n";
 
     int indice;
-    cout << "Digite o numero do produto que deseja remover: ";
-    cin >> indice;
+    do{
+        indice = lerInt("Digite o numero do produto que deseja remover: ");
 
-    if (indice < 1 || indice > qnt) {
-        cout << "Indice invalido!" << endl;
-        return;
-    }
+        if(indice < 0 || indice > qnt){
+            cout << "Indice invalido!" << endl;
+        }else if(indice == 0){
+            cout << "NÃO REMOVEU NENHUM ITEM" << endl;
+            return;
+        }
+    }while(indice < 0 || indice > qnt);
 
     string nomeRemover = p[indice-1].nome;
 
